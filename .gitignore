@@ -1,0 +1,15 @@
+# Ignore Visual Studio folder
+.vs/
+
+# Ignore Visual Studio Code folder
+.vscode/
+
+# Ignore Node.js modules (if applicable)
+node_modules/
+
+# Ignore environment files
+.env
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,3206 @@
+{
+	"info": {
+		"_postman_id": "39032898-3cf8-48fc-8c5b-b104fd5f1649",
+		"name": "Dev2 testscripts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Categories - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json().categories[0]\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && pm.expect(Object.keys(data)).to.include(\"name\")\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 2 object keys\", function () {\r",
+							"    var data = pm.response.json().categories[0]\r",
+							"    pm.expect(Object.keys(data).length).to.equal(2)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/categories/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories - negative",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body does not match string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.include(\"id\") &&  pm.expect(pm.response.text()).to.not.include(\"name\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && pm.expect(Object.keys(data)).to.include(\"name\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has only 2 object keys\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data).length).to.equal(2)\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"// Als een categorie niet bestaat geeft die een message mee en dat is dan ook de enigste keer dat die een message stuurt. Vandaar dat ik daar op check.\r",
+							"pm.test(\"Category id exists\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    console.log(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.not.include(\"message\");\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/categories/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - negative (niet bestaand categorie)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Category id does not exists\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(data.message).to.include(\"bestaat\") && pm.expect(data.message).to.include(\"niet\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"categorie ' + pm.request.url.path[2] + ' bestaat niet\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/categories/99999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"99999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && stringCheck.to.include(\"code\") && stringCheck.to.include(\"title\") && stringCheck.to.include(\"description\") && stringCheck.to.include(\"price\") && stringCheck.to.include(\"stock\") && stringCheck.to.include(\"category_id\") && stringCheck.to.include(\"price_vat\")\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 8 object keys\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    pm.expect(Object.keys(data).length).to.equal(8)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products  - negative",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body does no match string\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.not.include(\"id\") && stringCheck.to.not.include(\"code\") && stringCheck.to.not.include(\"title\") && stringCheck.to.not.include(\"description\") && stringCheck.to.not.include(\"price\") && stringCheck.to.not.include(\"stock\") && stringCheck.to.not.include(\"category_id\") && stringCheck.to.not.include(\"price_vat\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products?q= - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && stringCheck.to.include(\"code\") && stringCheck.to.include(\"title\") && stringCheck.to.include(\"description\") && stringCheck.to.include(\"price\") && stringCheck.to.include(\"stock\") && stringCheck.to.include(\"category_id\") && stringCheck.to.include(\"price_vat\") && stringCheck.to.include(\"search\")\r",
+							"});\r",
+							"\r",
+							"// In dit geval is het 9 aangezien search er nu ook bij zit voor de search query\r",
+							"pm.test(\"Response has only 9 object keys\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    pm.expect(Object.keys(data).length).to.equal(9)\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Searchquery results exist and or is not empty\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data)).to.not.include(\"message\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products?q=bed 90",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "bed 90"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products?q= - negative (geen zoekterm)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"vul alstublieft een zoekterm in\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products?q=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products?q= - negative (geen resultaat)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Wij vonden geen producten voor jouw zoekresultaat!\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products?q=fish and chips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "fish and chips"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && stringCheck.to.include(\"code\") && stringCheck.to.include(\"title\") && stringCheck.to.include(\"description\") && stringCheck.to.include(\"price\") && stringCheck.to.include(\"stock\") && stringCheck.to.include(\"category_id\") && stringCheck.to.include(\"price_vat\")\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 8 object keys\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data).length).to.equal(8)\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"\r",
+							"pm.test(\"Product id exists\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data)).to.not.include(\"message\");\r",
+							"})\r",
+							"\r",
+							"\r",
+							"pm.test(\"Price_vat is price * 1.21\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(data.price_vat).to.equal(Math.round(data.price * 1.21))\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products/35",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"35"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - negative (niet bestaand product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Category id does not exists\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(data.message).to.include(\"bestaat\") && pm.expect(data.message).to.include(\"niet\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    console.log(pm.request.url.path[2])\r",
+							"    pm.response.to.have.body('{\"message\":\"product ' + pm.request.url.path[2] + ' bestaat niet\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products/99999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"99999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id/products - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && stringCheck.to.include(\"code\") && stringCheck.to.include(\"title\") && stringCheck.to.include(\"description\") && stringCheck.to.include(\"price\") && stringCheck.to.include(\"stock\") && stringCheck.to.include(\"category_id\") && stringCheck.to.include(\"price_vat\")\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 10 object keys\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    pm.expect(Object.keys(data).length).to.equal(8)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/categories/1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id/products - negative (geen product in categorie of niet bestaand categorie)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    console.log(pm.request.url.path)\r",
+							"    pm.response.to.have.body('{\"message\":\"Er zijn geen producten in categorie ' + pm.request.url.path[2] + ' of de categorie bestaat niet\"}');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/categories/99999/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"99999",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json().countries[0]\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && pm.expect(Object.keys(data)).to.include(\"name\")\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 2 object keys\", function () {\r",
+							"    var data = pm.response.json().countries[0]\r",
+							"    pm.expect(Object.keys(data).length).to.equal(2)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries - negative",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body does not match string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.not.include(\"id\") &&  pm.expect(pm.response.text()).to.not.include(\"name\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && pm.expect(Object.keys(data)).to.include(\"name\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has only 2 object keys\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(Object.keys(data).length).to.equal(2)\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"\r",
+							"pm.test(\"Country id exists\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    console.log(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.not.include(\"message\");\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/countries/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries/:id - negative (niet bestaand land)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Country id does not exists\", function (){\r",
+							"    var data = pm.response.json()\r",
+							"    pm.expect(data.message).to.include(\"bestaat\") && pm.expect(data.message).to.include(\"niet\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"land ' + pm.request.url.path[2] + ' bestaat niet\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/countries/99999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries",
+						"99999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - poitive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json().users[0]\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && stringCheck.to.include(\"email\") && stringCheck.to.include(\"firstname\") && stringCheck.to.include(\"infix\") && stringCheck.to.include(\"lastname\") && stringCheck.to.include(\"street\") && stringCheck.to.include(\"housenumber\") && stringCheck.to.include(\"zipcode\") && stringCheck.to.include(\"city\") && stringCheck.to.include(\"newsletter\") && stringCheck.to.include(\"userrole_id\") && stringCheck.to.include(\"country_id\")\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 12 object keys\", function () {\r",
+							"    var data = pm.response.json().users[0]\r",
+							"    pm.expect(Object.keys(data).length).to.equal(12)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - negative",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body does no match string\", function () {\r",
+							"    var data = pm.response.json().products[0]\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.not.include(\"id\") && stringCheck.to.not.include(\"email\") && stringCheck.to.not.include(\"firstname\") && stringCheck.to.not.include(\"infix\") && stringCheck.to.not.include(\"lastname\") && stringCheck.to.not.include(\"street\") && stringCheck.to.not.include(\"housenumber\") && stringCheck.to.not.include(\"zipcode\") && stringCheck.to.not.include(\"city\") && stringCheck.to.not.include(\"newsletter\") && stringCheck.to.not.include(\"userrole_id\") && stringCheck.to.not.include(\"country_id\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users/me - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    var stringCheck = pm.expect(Object.keys(data))\r",
+							"    \r",
+							"    pm.expect(Object.keys(data)).to.include(\"id\") && stringCheck.to.include(\"email\") && stringCheck.to.include(\"firstname\") && stringCheck.to.include(\"infix\") && stringCheck.to.include(\"lastname\") && stringCheck.to.include(\"street\") && stringCheck.to.include(\"housenumber\") && stringCheck.to.include(\"zipcode\") && stringCheck.to.include(\"city\") && stringCheck.to.include(\"newsletter\") && stringCheck.to.include(\"userrole\") && stringCheck.to.include(\"country\") && pm.expect(Object.keys(data[\"userrole\"])).to.include(\"id\") && pm.expect(Object.keys(data[\"userrole\"])).to.include(\"name\") && pm.expect(Object.keys(data[\"country\"])).to.include(\"id\") && pm.expect(Object.keys(data[\"country\"])).to.include(\"name\") \r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has only 16 object keys\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    var sum = Object.keys(data[\"userrole\"]).length + Object.keys(data[\"country\"]).length\r",
+							"    pm.expect(Object.keys(data).length + sum).to.equal(16)\r",
+							"    \r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users/me - negative (geen token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Unauthorized\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users/me - negative (incorrecte token of geen toegang)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Forbidden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Dit is geen token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Duitsland\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries - negative (voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Land naam moet tenminste 2 karakters bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"F\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries - negative (geen token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Unauthorized\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Duitsland\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries - negative (incorrecte token of geen toegang)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Forbidden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Dit is geen token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Duitsland\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Diamanten bed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories - negatieve (voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Categorie naam moet tenminste 2 karakters bevatten en mag alleen letters en spaties bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"s\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories - negative (geen token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Unauthorized\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"kippen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories negative (incorrecte token of geen toegang)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Forbidden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Dit is geen token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"kippen\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"nietbestaandemail@gmail.com\",\r\n    \"infix\": \"\",\r\n    \"lastname\": \"admin\",\r\n    \"street\": \"Maaspad\",\r\n    \"housenumber\": 17,\r\n    \"suffix\": \"\",\r\n    \"zipcode\": \"1316EA\",\r\n    \"city\": \"Almere\",\r\n    \"country\": 1,\r\n    \"firstname\": \"Admin\",\r\n    \"password\": \"gfdsgdf234\",\r\n    \"newsletter\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - negative (postcode voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Dit is geen geldige postcode!\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"testUser@gmail.com\",\r\n    \"infix\": \"\",\r\n    \"lastname\": \"admin\",\r\n    \"street\": \"Maaspad\",\r\n    \"housenumber\": 17,\r\n    \"suffix\": \"\",\r\n    \"zipcode\": \"5060VAR\",\r\n    \"city\": \"Almere\",\r\n    \"country\": 1,\r\n    \"firstname\": \"Admin\",\r\n    \"password\": \"gfdsgdf234\",\r\n    \"newsletter\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - negative (email bestaat al)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":\"Dit email adres bestaat al\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"cindi.wellings@fake.windesheim.nl\",\r\n    \"infix\": \"\",\r\n    \"lastname\": \"admin\",\r\n    \"street\": \"Maaspad\",\r\n    \"housenumber\": 17,\r\n    \"suffix\": \"\",\r\n    \"zipcode\": \"1111\",\r\n    \"city\": \"Mars\",\r\n    \"country\": 1,\r\n    \"firstname\": \"Newuser\",\r\n    \"password\": \"Mars123\",\r\n    \"newsletter\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - negative (geen firstname ingevoerd)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Geen voornaam ingevuld!\",\"Voornaam moet tenminste 2 karakters bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newuseragain@gmail.com\",\r\n    \"infix\": \"\",\r\n    \"lastname\": \"admin\",\r\n    \"street\": \"Maaspad\",\r\n    \"housenumber\": 17,\r\n    \"suffix\": \"\",\r\n    \"zipcode\": \"1316EA\",\r\n    \"city\": \"Almere\",\r\n    \"country\": 1,\r\n    \"firstname\": \"\",\r\n    \"password\": \"blablabla123\",\r\n    \"newsletter\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"CODE-1111\",\r\n    \"title\": \"Hele harde warme bed\",\r\n    \"description\": \"Bed gemaakt van warme lavastenen\",\r\n    \"price\": \"123456\",\r\n    \"stock\": \"1\",\r\n    \"category_id\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products - negative (title voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Title mag alleen letters, cijfers, witruimtes en dashes bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"CODE-1111\",\r\n    \"title\": \"Hele harde warme bed\",\r\n    \"description\": \"Bed gemaakt van warme lavastenen\",\r\n    \"price\": \"123456\",\r\n    \"stock\": \"1\",\r\n    \"category_id\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products - negative (geen token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Unauthorized\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"CODE-1111\",\r\n    \"title\": \"Hele harde warme bed\",\r\n    \"description\": \"Bed gemaakt van warme lavastenen\",\r\n    \"price\": \"123456\",\r\n    \"stock\": \"1\",\r\n    \"category_id\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products - negative (incorrecte token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Forbidden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Dit is geen token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"SBA-JEMOEDER1234\",\r\n    \"title\": \"zombie kip\",\r\n    \"description\": \"niet food\",\r\n    \"price\": \"499.49\",\r\n    \"stock\": \"16\",\r\n    \"category_id\": \"38\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    var data = pm.response.json()\r",
+							"    console.log(Object.keys(data))\r",
+							"    pm.expect(Object.keys(data)).to.include(\"access_token\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin@gmail.com\",\r\n    \"password\": \"admin1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - negatieve (incorrecte inloggegevens WACHTWOORD)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Inloggegevens incorrect\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin@gmail.com\",\r\n    \"password\": \"isDitHetJuisteWachtwoord?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - negatieve (incorrecte inloggegevens USERNAME)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Inloggegevens incorrect\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"onjuist@gmail.com\",\r\n    \"password\": \"admin1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"test drie\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories/51",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"51"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - negative (voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Categorie naam moet tenminste 2 karakters bevatten en mag alleen letters en spaties bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Bedbodems 2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - negative (geen token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Unauthorized\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Bedbodems twee\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - negative (incorrecte token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Forbidden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Dit is geen token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Bedbodems\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"code\": \"NP-002\",\r\n\"title\": \"Even Newer product\",\r\n\"description\": \"Awesome stuff\",\r\n\"price\": \"123\",\r\n\"stock\": \"3\",\r\n\"category_id\": \"3\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/54",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"54"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - negative (voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Description mag alleen letters, cijfers, witruimtes en dashes bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"code\": \"NP-002\",\r\n\"title\": \"Even Newer product\",\r\n\"description\": \"Awesome stuff 2!\",\r\n\"price\": \"123\",\r\n\"stock\": \"3\",\r\n\"category_id\": \"3\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/54",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"54"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - negative (geen token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Unauthorized\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"code\": \"NP-002\",\r\n\"title\": \"Even Newer product\",\r\n\"description\": \"Awesome stuff\",\r\n\"price\": \"123\",\r\n\"stock\": \"3\",\r\n\"category_id\": \"3\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/54",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"54"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - negative (incorrecte token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Forbidden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Dit is geen token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"code\": \"NP-002\",\r\n\"title\": \"Even Newer product\",\r\n\"description\": \"Awesome stuff\",\r\n\"price\": \"123\",\r\n\"stock\": \"3\",\r\n\"category_id\": \"3\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/54",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"54"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nederland\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries/:id - negative (voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Land naam moet tenminste 2 karakters bevatten en mag alleen letters en spaties bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nederland2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"email\": \"windesheim@gmail.com\",\r\n\"password\": \"Test1234!\",\r\n\"firstname\": \"Test\",\r\n\"infix\": \"de\",\r\n\"lastname\": \"User\",\r\n\"street\": \"Hospitaaldreef\",\r\n\"housenumber\": \"5\",\r\n\"zipcode\": \"1315 RC\",\r\n\"city\": \"Almere\",\r\n\"newsletter\": 0,\r\n\"country\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/76",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"76"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users/:id - (street voldoet niet aan regex)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"errors\":[\"Straatnaam moet tenminste 2 karakters bevatten\"]}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"email\": \"windesheimmmm@gmail.com\",\r\n\"password\": \"Test1234!\",\r\n\"firstname\": \"Test\",\r\n\"infix\": \"de\",\r\n\"lastname\": \"User\",\r\n\"street\": \"H\",\r\n\"housenumber\": \"5\",\r\n\"zipcode\": \"1315 RC\",\r\n\"city\": \"Almere\",\r\n\"newsletter\": 0,\r\n\"country\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/63",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"63"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories/51",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"51"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories/:id - negative (category heeft producten))",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"Deze categorie bevat producten en kan daarom niet verwijderd worden\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/categories/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"categories",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products/:id - negative",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"100"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries/:id - positive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body is correct\", function () {\r",
+							"    pm.response.to.have.body('{\"message\":\"success\"}');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries/:id - negative",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NjMsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiZmlyc3RuYW1lIjoiQWRtaW4iLCJpbmZpeCI6IiIsImxhc3RuYW1lIjoiYWRtaW4iLCJzdHJlZXQiOiJNYWFzcGFkIiwiaG91c2VudW1iZXIiOiIxNyIsInN1ZmZpeCI6IiIsInppcGNvZGUiOiIxMzE2RUEiLCJjaXR5IjoiQWxtZXJlIiwibmV3c2xldHRlciI6MSwicGFzc3dvcmQiOiIkMmIkMTAkTEtGYTJnYzV4Z2pST3F3aDM0ajF3dXYvTkIwYVUud1lBZWJqMVpwTzZwZHdjU3B3V3o4Ly4iLCJ1c2Vycm9sZV9pZCI6MywiY291bnRyeV9pZCI6MSwiaWF0IjoxNjQxOTM4NDI3fQ.XgPBR-HuiK8d7xGY-ve1JEXPKF2f2Slx6WslBY3Ai2o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/countries/1000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"countries",
+						"1000"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

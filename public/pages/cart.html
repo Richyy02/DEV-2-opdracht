@@ -1,0 +1,35 @@
+<h2>Winkelwagen</h2>
+
+<p>U heeft de volgende producten in uw winkelwagen:</p>
+
+<div class="cart">
+    <div id="container-cart-products">
+        Uw winkelwagen is leeg.
+    </div>
+
+    <div class="container-form margin-top-large">
+        <span>Totaalbedrag</span>
+        <span class="large">
+            &euro;
+            <span id="cart-total">0,00</span>
+        </span>
+
+        <span></span>
+        <button class="action-link margin-top" data-action="submitOrder">Bestelling plaatsen</button>
+    </div>
+</div>
+
+<template id="template-cart-product">
+    <div class="cart-product container-columns">
+        <div class="cart-product-name"></div>
+        <div>
+            &euro;
+            <span class="cart-product-price"></span>
+        </div>
+        <div class="cart-product-amount"></div>
+        <div>
+            &euro;
+            <span class="cart-product-totalprice"></span>
+        </div>
+    </div>
+</template>

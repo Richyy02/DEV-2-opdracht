@@ -1,0 +1,43 @@
+<h2>Nieuw account aanmaken</h2>
+
+<div class="container-form">
+    <label>Naam</label>
+    <span class="flex">
+        <input type="text" name="firstname" placeholder="voornaam" required />
+        <input type="text" name="infix" placeholder="tussenvoegsel" />
+        <input type="text" name="lastname" placeholder="achternaam" required />
+    </span>
+
+    <label>Adres</label>
+    <span>
+        <span class="flex" id="address-line-1">
+            <input type="text" name="street" placeholder="straat" required />
+            <input type="text" name="housenumber" placeholder="huisnummer" required />
+        </span>
+        <span class="flex" id="address-line-2">
+            <input type="text" name="zipcode" placeholder="postcode" required />
+            <input type="text" name="city" placeholder="plaats" required />
+            
+        </span>
+    </span>
+
+    <label>Contactgegevens</label>
+    <input type="text" name="email" placeholder="e-mailadres" required />
+    <label></label>
+    <input type="password" name="password" placeholder="wachtwoord" required />
+    <label for="newsletter">Nieuwsbrief</label>
+    <input type="checkbox" name="newsletter" required />
+
+    <label></label>
+    <button class="action-link" data-action="createUser">Account aanmaken</button>
+</div>
+
+<template id="template-form-input-select">
+    <select name="country">
+        
+    </select>
+</template>
+
+<template id="template-form-input-select-option">
+    <option></option>
+</template>

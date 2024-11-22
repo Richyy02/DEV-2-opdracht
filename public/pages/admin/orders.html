@@ -1,0 +1,50 @@
+<div id="container-orders">
+    <table id="table-orders" class="table-orders">
+        
+    </table>
+</div>
+
+<template id="template-order">
+    <tr>
+        <td colspan=5></td>
+    </tr>
+    <tr>
+        <th>naam</th>
+        <th>datum</th>
+        <th>betaald</th>
+        <th>verzonden</th>
+        <th>totaalprijs</th>
+    </tr>
+    <tr class="order">
+        <td class="order-user"></td>
+        <td class="order-date"></td>
+        <td class="order-paid">
+            <select>
+                <option value="0">Nee</option>
+                <option value="1">Ja</option>
+            </select>
+        </td>
+        <td class="order-shipped">
+            <select>
+                <option value="0">Nee</option>
+                <option value="1">Ja</option>
+            </select>
+        </td>
+        <td class="order-price-vat">&euro;&nbsp;</td>
+    </tr>
+    <tr class="order-line-header">
+        <td></td>
+        <td colspan=2>product</td>
+        <td>aantal</td>
+        <td>prijs</td>
+    </tr>
+</template>
+
+<template id="template-order-line">
+    <tr class="order-line">
+        <td></td>
+        <td colspan=2 class="order-line-product"></td>
+        <td class="order-line-amount"></td>
+        <td class="order-line-price-vat">&euro;&nbsp;</td>
+    </tr>
+</template>

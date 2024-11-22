@@ -1,0 +1,23 @@
+GET http://localhost:8080/api/categories
+###
+GET http://localhost:8080/api/products
+###
+
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+
+{
+    "firstname": "",
+    "infix": "",
+    "lastname": "",
+    "street": "",
+    "housenumber": "",
+    "suffix": "",
+    "zipcode": "",
+    "city": "",
+    "country_id": "",
+    "email": "",
+    "password": "",
+    "newsletter": ""
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEDShop - De webshop voor Backend Development 2020</title>
+    <link rel="stylesheet" href="webshop.css">
+</head>
+
+<body>
+    <header>
+        <div class="container container-header">
+            <div class="container-columns">
+                <h1>
+                    <span class="large">&#128719;</span>
+                    BEDShop
+                </h1>
+                <div class="container-user action-link" data-action="userDetails">
+                    U bent niet ingelogd.
+                </div>
+            </div>
+            <div class="tagline">
+                Alles voor een goede nachtrust
+            </div>
+        </div>
+    </header>
+
+    <div class="container container-content">
+        <nav>
+            <div class="container-menu">
+                <div class="menu-item">
+                    <a class="page-link" data-page="welcome" href="javascript://">Home</a>
+                </div>
+
+                <div class="menu-item">
+                    <input class="search" type="search" id="search-query" placeholder="Wat zoekt u?" />
+                    <a class="action-link" data-action="search" id="link-search" href="javascript://">&#128269;</a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="action-link" data-action="showCart" href="javascript://">
+                        Winkelmandje
+                        <span id="cart-item-count"></span>
+                    </a>
+                </div>
+
+                <div class="menu-item">
+                    <a class="page-link" data-page="about-us" href="javascript://">Over ons</a>
+                </div>
+
+                <div class="menu-item hidden" id="menu-item-orders">
+                    <a class="action-link" data-action="adminLoadOrders" href="javascript://">Orders</a>
+                </div>
+
+                <div class="menu-item hidden" id="menu-item-admin">
+                    <a class="page-link" data-page="admin/index" href="javascript://">Admin</a>
+                </div>
+                
+                <div class="menu-item">
+                    <a id="link-login" class="page-link" data-page="login" data-action="logout" href="javascript://">Inloggen</a>
+                </div>
+
+            </div>
+        </nav>
+
+        <main id="container-main"></main>
+
+        <aside id="container-categories">
+            <h3>Categori&euml;en</h3>
+            <div id="content-categories" class="margin">
+                Hier komen de categori&euml;en.
+            </div>
+            <template id="template-category-item">
+                <div class="category-item">
+                    <a class="action-link category-item-link" data-action="loadCategoryProducts" href="javascript://">
+                        
+                    </a>
+                </div>
+            </template>
+        </aside>
+
+    </div>
+
+    <footer>
+        Deze webshop is onderdeel van het vak Development 2 - 2021 van
+        <a href="https://www.windesheim.nl">Hogeschool Windesheim</a> in Almere
+    </footer>
+    
+    <div id="notifications">
+    </div>
+
+    <script src="webshop.js"></script>
+</body>
+
+</html>
